@@ -1,0 +1,404 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>DreamPaws • Starlight Creatures • MagicFluff Realm • SparkleTails • Neon Forest ✨</title>
+<style>
+  :root{
+    --bg1:#06060a;
+    --bg2:#17121a;
+    --pink1:#ff66b2;
+    --pink2:#ffb6e6;
+    --glow: rgba(255,118,200,0.14);
+  }
+  html,body{height:100%;margin:0;background:linear-gradient(180deg,var(--bg1),var(--bg2));font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial;color:#fff;overflow-x:hidden}
+  .wrap{max-width:1200px;margin:34px auto;padding:0 20px;text-align:center;position:relative;z-index:2}
+
+/* Title */
+  .header{
+    display:flex;flex-direction:column;gap:10px;align-items:center;justify-content:center;
+  }
+  h1{
+    margin:0;
+    font-weight:900;
+    font-size:clamp(1.8rem,5.6vw,3.6rem);
+    line-height:1;
+    letter-spacing:0.01em;
+    position:relative;
+    background:linear-gradient(90deg,var(--pink1),var(--pink2));
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    text-shadow:0 6px 28px rgba(255,80,170,0.12);
+    padding:10px 18px;
+    border-radius:14px;
+  }
+
+/* extra glints on title */
+  .title-glints{
+    position:absolute;pointer-events:none;inset:0;z-index:3;
+    mix-blend-mode:screen;
+  }
+  /* small round sparkles behind the title */
+  .glint { position:absolute;border-radius:50%;filter:blur(1px);opacity:0.95;transform:translate(-50%,-50%);animation:glinty 3.2s linear infinite; }
+  .g1{width:8px;height:8px;background:rgba(255,255,255,0.95);left:8%;top:20%;animation-delay:0s}
+  .g2{width:6px;height:6px;background:rgba(255,255,255,0.8);left:55%;top:62%;animation-delay:.6s}
+  .g3{width:10px;height:10px;background:rgba(255,255,255,0.9);left:75%;top:18%;animation-delay:1.2s}
+  .g4{width:5px;height:5px;background:rgba(255,255,255,0.85);left:40%;top:30%;animation-delay:1.8s}
+  @keyframes glinty{0%{transform:translate(-50%,-50%) scale(.9) rotate(-6deg);opacity:0.9}50%{transform:translate(-50%,-50%) scale(1.3) rotate(6deg);opacity:1}100%{transform:translate(-50%,-50%) scale(.9) rotate(-6deg);opacity:0.9}}
+
+/* subtitle + small banner */
+  .subtitle{
+    color:#ffd6eb;font-weight:700;font-size:clamp(.9rem,1.6vw,1.05rem);
+    display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:center;
+  }
+  .badges{display:inline-flex;gap:8px}
+  .badge{background:linear-gradient(90deg,var(--pink1),var(--pink2));padding:6px 10px;border-radius:999px;color:#1b0016;font-weight:800;font-size:.85rem;box-shadow:0 6px 20px rgba(255,90,170,0.12)}
+  /* gallery grid */
+  .gallery{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-top:26px;align-items:start}
+  .card{
+    position:relative;overflow:hidden;border-radius:14px;background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));
+    box-shadow:0 12px 30px rgba(0,0,0,0.6);transition:transform .28s cubic-bezier(.2,.9,.3,1),box-shadow .28s;
+    border:1px solid rgba(255,255,255,0.03);
+  }
+  .card:hover{transform:translateY(-10px) scale(1.02);box-shadow:0 18px 48px rgba(255,80,170,0.12)}
+  .card .media{display:block;width:100%;height:210px;object-fit:cover;background:#111}
+  .caption{padding:10px 12px;color:var(--pink2);font-weight:800;letter-spacing:.02em;text-shadow:0 0 8px rgba(255,150,210,0.15)}
+  @media (max-width:420px){ .card .media{height:160px} }
+
+/* shimmer overlay on images */
+  .shimmer{
+    position:absolute;inset:0;pointer-events:none;mix-blend-mode:screen;
+    background:linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.18) 50%, rgba(255,255,255,0) 100%);
+    transform:translateX(-120%) skewX(-8deg);
+    transition:transform .9s cubic-bezier(.2,.9,.3,1);
+  }
+  .card:hover .shimmer{transform:translateX(120%) skewX(-8deg);}
+
+/* twinkle specks per card (CSS generated) */
+  .twinkles{position:absolute;inset:8px;pointer-events:none}
+  .twinkles span{position:absolute;border-radius:50%;background:radial-gradient(circle, rgba(255,255,255,0.95) 0 40%, rgba(255,255,255,0) 60%);opacity:0.0;transform:scale(.6);filter:blur(.6px);animation:twinkle 2.2s infinite;}
+  @keyframes twinkle{0%{opacity:0;transform:scale(.4)}40%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(.6)}}
+
+/* heavy starfield behind the content (canvas sits behind but above bg) */
+  #sparklesCanvas{position:fixed;inset:0;z-index:1;pointer-events:none}
+
+/* footer note */
+  .note{margin-top:18px;color:#ccbcd1;font-size:.95rem}
+
+/* playful corners spark rings */
+  .ring{
+    position:fixed;z-index:1;pointer-events:none;
+    background:conic-gradient(from 10deg, rgba(255,200,240,0.06), rgba(255,80,170,0.1), rgba(255,200,240,0.06));
+    width:300px;height:300px;border-radius:50%;filter:blur(30px);
+  }
+  .ring.r1{left:-90px;top:-80px;transform:rotate(8deg)}
+  .ring.r2{right:-120px;bottom:-80px;transform:rotate(-18deg}
+</style>
+</head>
+<body>
+  <!-- heavy sparkles canvas -->
+  <canvas id="sparklesCanvas"></canvas>
+
+  <!-- soft rings -->
+  <div class="ring r1"></div>
+  <div class="ring r2" style="right:-120px;bottom:-80px;"></div>
+
+  <div class="wrap" role="main">
+    <header class="header">
+      <div style="position:relative;">
+        <h1>✨ DreamPaws • Starlight Creatures • MagicFluff Realm • SparkleTails • Neon Forest ✨</h1>
+        <div class="title-glints" aria-hidden="true">
+          <div class="glint g1"></div>
+          <div class="glint g2"></div>
+          <div class="glint g3"></div>
+          <div class="glint g4"></div>
+        </div>
+      </div>
+
+      <div class="subtitle" aria-hidden="false">
+        <div class="badges">
+          <span class="badge">Cute & Dreamy</span>
+          <span class="badge">Neon Magic</span>
+          <span class="badge">Fantasy Pets</span>
+        </div>
+      </div>
+    </header>
+
+    <section class="gallery" aria-label="Sparkly fantasy creature gallery">
+      <!-- 15 cards -->
+      <!-- Note: images are safe, stylized fantasy / creature queries from Unsplash source (hotlink queries). If you want fixed images, replace the src URLs with your own. -->
+      <article class="card">
+        <img class="media" src="https://source.unsplash.com/800x600/?fantasy,fox,illustration" alt="Mystic fox illustration">
+        <div class="shimmer"></div>
+        <div class="twinkles" aria-hidden="true">
+          <span style="left:10%;top:18%;width:6px;height:6px;animation-delay:0s"></span>
+          <span style="left:72%;top:22%;width:4px;height:4px;animation-delay:.6s"></span>
+          <span style="left:42%;top:76%;width:5px;height:5px;animation-delay:1.1s"></span>
+        </div>
+        <div class="caption">Mystic Fox</div>
+      </article>
+
+      <article class="card">
+        <img class="media" src="https://source.unsplash.com/800x600/?cute,dragon,illustration" alt="Cute baby dragon">
+        <div class="shimmer"></div>
+        <div class="twinkles" aria-hidden="true">
+          <span style="left:18%;top:10%;width:5px;height:5px;animation-delay:.2s"></span>
+          <span style="left:62%;top:68%;width:6px;height:6px;animation-delay:.9s"></span>
+        </div>
+        <div class="caption">Pocket Dragon</div>
+      </article>
+
+      <article class="card">
+        <img class="media" src="https://source.unsplash.com/800x600/?fantasy,owl,illustration" alt="Fantasy owl">
+        <div class="shimmer"></div>
+        <div class="twinkles" aria-hidden="true">
+          <span style="left:22%;top:25%;width:4px;height:4px;animation-delay:0s"></span>
+          <span style="left:78%;top:40%;width:6px;height:6px;animation-delay:.8s"></span>
+        </div>
+        <div class="caption">Stargazer Owl</div>
+      </article>
+
+      <article class="card">
+        <img class="media" src="https://source.unsplash.com/800x600/?fantasy,cat,illustration" alt="Magical cat illustration">
+        <div class="shimmer"></div>
+        <div class="twinkles" aria-hidden="true">
+          <span style="left:12%;top:66%;width:5px;height:5px;animation-delay:.3s"></span>
+          <span style="left:60%;top:22%;width:6px;height:6px;animation-delay:.9s"></span>
+        </div>
+        <div class="caption">Nebula Cat</div>
+      </article>
+
+      <article class="card">
+        <img class="media" src="https://source.unsplash.com/800x600/?cute,griffin,illustration" alt="Cute griffin">
+        <div class="shimmer"></div>
+        <div class="twinkles" aria-hidden="true">
+          <span style="left:48%;top:12%;width:6px;height:6px;animation-delay:.2s"></span>
+          <span style="left:30%;top:62%;width:5px;height:5px;animation-delay:1.2s"></span>
+        </div>
+        <div class="caption">Little Griffin</div>
+      </article>
+
+      <article class="card">
+        <img class="media" src="https://source.unsplash.com/800x600/?fantasy,deer,illustration" alt="Fantasy deer">
+        <div class="shimmer"></div>
+        <div class="twinkles" aria-hidden="true">
+          <span style="left:82%;top:18%;width:5px;height:5px;animation-delay:.1s"></span>
+          <span style="left:10%;top:70%;width:6px;height:6px;animation-delay:.6s"></span>
+        </div>
+        <div class="caption">Moonlit Fawn</div>
+      </article>
+
+      <article class="card">
+        <img class="media" src="https://source.unsplash.com/800x600/?fantasy,rabbit,illustration" alt="Cute fantasy rabbit">
+        <div class="shimmer"></div>
+        <div class="twinkles" aria-hidden="true">
+          <span style="left:28%;top:32%;width:5px;height:5px;animation-delay:.1s"></span>
+          <span style="left:66%;top:42%;width:4px;height:4px;animation-delay:1s"></span>
+        </div>
+        <div class="caption">Cotton Cloud Bun</div>
+      </article>
+
+      <article class="card">
+        <img class="media" src="https://source.unsplash.com/800x600/?fantasy,hedgehog,illustration" alt="Fantasy hedgehog">
+        <div class="shimmer"></div>
+        <div class="twinkles" aria-hidden="true">
+          <span style="left:18%;top:78%;width:5px;height:5px;animation-delay:.4s"></span>
+          <span style="left:54%;top:20%;width:4px;height:4px;animation-delay:.7s"></span>
+        </div>
+        <div class="caption">Cereal Hedge</div>
+      </article>
+
+      <article class="card">
+        <img class="media" src="https://source.unsplash.com/800x600/?fantasy,fox,watercolor,illustration" alt="Watercolor fantasy fox">
+        <div class="shimmer"></div>
+        <div class="twinkles" aria-hidden="true">
+          <span style="left:6%;top:26%;width:6px;height:6px;animation-delay:.2s"></span>
+          <span style="left:68%;top:56%;width:5px;height:5px;animation-delay:1.1s"></span>
+        </div>
+        <div class="caption">Aurora Fox</div>
+      </article>
+
+      <article class="card">
+        <img class="media" src="https://source.unsplash.com/800x600/?fantasy,unicorn,illustration" alt="Unicorn illustration">
+        <div class="shimmer"></div>
+        <div class="twinkles" aria-hidden="true">
+          <span style="left:40%;top:18%;width:6px;height:6px;animation-delay:.3s"></span>
+          <span style="left:74%;top:70%;width:5px;height:5px;animation-delay:1s"></span>
+        </div>
+        <div class="caption">Petal Unicorn</div>
+      </article>
+
+      <article class="card">
+        <img class="media" src="https://source.unsplash.com/800x600/?cute,phoenix,illustration" alt="Phoenix illustration">
+        <div class="shimmer"></div>
+        <div class="twinkles" aria-hidden="true">
+          <span style="left:24%;top:12%;width:6px;height:6px;animation-delay:.2s"></span>
+          <span style="left:82%;top:36%;width:4px;height:4px;animation-delay:.9s"></span>
+        </div>
+        <div class="caption">Sunlet Phoenix</div>
+      </article>
+
+      <article class="card">
+        <img class="media" src="https://source.unsplash.com/800x600/?fantasy,owl,cat,illustration" alt="Hybrid fantasy creature">
+        <div class="shimmer"></div>
+        <div class="twinkles" aria-hidden="true">
+          <span style="left:12%;top:36%;width:4px;height:4px;animation-delay:.5s"></span>
+          <span style="left:66%;top:52%;width:6px;height:6px;animation-delay:1.2s"></span>
+        </div>
+        <div class="caption">Whimsy Hybrid</div>
+      </article>
+
+      <article class="card">
+        <img class="media" src="https://source.unsplash.com/800x600/?fantasy,seal,illustration" alt="Cute fantasy seal">
+        <div class="shimmer"></div>
+        <div class="twinkles" aria-hidden="true">
+          <span style="left:44%;top:32%;width:5px;height:5px;animation-delay:.3s"></span>
+          <span style="left:72%;top:18%;width:4px;height:4px;animation-delay:.8s"></span>
+        </div>
+        <div class="caption">Glitter Seal</div>
+      </article>
+
+      <article class="card">
+        <img class="media" src="https://source.unsplash.com/800x600/?fantasy,fox,kawaii,illustration" alt="Kawaii fox">
+        <div class="shimmer"></div>
+        <div class="twinkles" aria-hidden="true">
+          <span style="left:8%;top:48%;width:5px;height:5px;animation-delay:.2s"></span>
+          <span style="left:56%;top:68%;width:6px;height:6px;animation-delay:1.0s"></span>
+        </div>
+        <div class="caption">Kawaii Tail</div>
+      </article>
+
+      <article class="card">
+        <img class="media" src="https://source.unsplash.com/800x600/?fantasy,mermaid,creature,illustration" alt="Mer-creature illustration">
+        <div class="shimmer"></div>
+        <div class="twinkles" aria-hidden="true">
+          <span style="left:28%;top:18%;width:6px;height:6px;animation-delay:.1s"></span>
+          <span style="left:74%;top:46%;width:5px;height:5px;animation-delay:.9s"></span>
+        </div>
+        <div class="caption">Bubble Sprite</div>
+      </article>
+    </section>
+
+    <div class="note">✨ All images are stylized, SFW fantasy creature photos/art via themed image queries. Hover cards to see shimmer and twinkles. Want fixed image files instead of query images? I can swap them in for you.</div>
+  </div>
+
+<script>
+/* Canvas sparkles particle system */
+(function(){
+  const canvas = document.getElementById('sparklesCanvas');
+  const ctx = canvas.getContext('2d');
+  let W = canvas.width = window.innerWidth;
+  let H = canvas.height = window.innerHeight;
+  const num = Math.floor((W*H)/20000) + 60; // scale count by screen size
+  const particles = [];
+
+  function rand(min,max){ return Math.random()*(max-min)+min; }
+
+  function makeParticle(){
+    return {
+      x: rand(0,W),
+      y: rand(0,H),
+      vx: rand(-0.15,0.15),
+      vy: rand(-0.2,0.2),
+      r: rand(0.6,2.8),
+      life: rand(2,6),
+      age: 0,
+      hue: Math.floor(rand(300,340)),
+      alpha: rand(0.25,0.95),
+      twinkle: Math.random()>.7
+    }
+  }
+
+  for(let i=0;i<num;i++) particles.push(makeParticle());
+
+  function resize(){ W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+  window.addEventListener('resize',resize);
+
+  let last = performance.now();
+  function loop(now){
+    const dt = Math.min(0.05,(now-last)/1000); last = now;
+    ctx.clearRect(0,0,W,H);
+
+    // subtle background glow gradient overlay
+    const g = ctx.createRadialGradient(W*0.15,H*0.12,40,W*0.6,H*0.6,Math.max(W,H));
+    g.addColorStop(0, 'rgba(255,110,190,0.07)');
+    g.addColorStop(0.6, 'rgba(120,80,200,0.02)');
+    ctx.fillStyle = g;
+    ctx.fillRect(0,0,W,H);
+
+    for(let p of particles){
+      p.x += p.vx * (1+Math.sin(now/1000)/2) * 60 * dt;
+      p.y += p.vy * 60 * dt;
+      p.age += dt;
+      if(p.age > p.life){
+        // respawn near top or center for variety
+        if(Math.random()>.5){ p.x = rand(0,W); p.y = -10; } else { p.x = rand(0,W); p.y = rand(0,H); }
+        p.age = 0; p.life = rand(2,6); p.r = rand(0.6,2.8);
+      }
+
+      const t = Math.sin((p.age / p.life) * Math.PI);
+      const alpha = p.alpha * (0.3 + 0.7*t);
+
+      // soft glow
+      ctx.beginPath();
+      const gradient = ctx.createRadialGradient(p.x,p.y,p.r*0.2,p.x,p.y,p.r*6);
+      gradient.addColorStop(0, `hsla(${p.hue},90%,90%,${alpha})`);
+      gradient.addColorStop(0.4, `hsla(${p.hue},85%,70%,${alpha*0.45})`);
+      gradient.addColorStop(1, `hsla(${p.hue},85%,60%,0)`);
+      ctx.fillStyle = gradient;
+      ctx.arc(p.x,p.y,p.r*6,0,Math.PI*2);
+      ctx.fill();
+
+      // sharp center
+      ctx.beginPath();
+      ctx.fillStyle = `rgba(255,255,255,${Math.min(1,alpha+0.1)})`;
+      ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fill();
+
+      // occasional tiny sparkle cross
+      if(p.twinkle && Math.random() < 0.02){
+        ctx.save();
+        ctx.translate(p.x,p.y);
+        ctx.rotate(Math.random()*Math.PI);
+        ctx.fillStyle = `rgba(255,255,255,${alpha})`;
+        ctx.fillRect(-p.r*0.8,-0.5,p.r*1.6,1);
+        ctx.fillRect(-0.5,-p.r*0.8,1,p.r*1.6);
+        ctx.restore();
+      }
+    }
+
+    requestAnimationFrame(loop);
+  }
+  requestAnimationFrame(loop);
+
+  // tiny interactive burst on mouse move
+  let mouseLast = 0;
+  window.addEventListener('mousemove', (e)=>{
+    const now = performance.now();
+    if(now - mouseLast < 40) return;
+    mouseLast = now;
+    for(let i=0;i<6;i++){
+      const p = makeParticle();
+      p.x = e.clientX + (Math.random()-0.5)*30;
+      p.y = e.clientY + (Math.random()-0.5)*30;
+      p.vx = (Math.random()-0.5)*1.2;
+      p.vy = (Math.random()-0.6)*1.2 - 0.5;
+      p.life = rand(0.6,1.8);
+      particles.push(p);
+      // limit array size
+      if(particles.length > 400) particles.splice(0, particles.length-300);
+    }
+  });
+})();
+
+/* small per-card twinkle offsets (randomized) so CSS animations feel different */
+document.querySelectorAll('.twinkles').forEach((t, i)=>{
+  t.querySelectorAll('span').forEach((s, idx)=>{
+    const d = (Math.random()*1.2) + (idx*0.3);
+    s.style.animationDelay = d + 's';
+    s.style.opacity = 0;
+  });
+});
+</script>
+</body>
+</html>
